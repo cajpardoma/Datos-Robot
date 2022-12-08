@@ -61,22 +61,32 @@ fig
 fecha_filtro <- max(Data$Fecha)
 fecha_filtro_min <- min(Data$Fecha)
 
+
+body <-   dashboardBody(
+    fluidRow(
+      tabBox(
+        title = "",
+        id = "tabset1", height = 450, width = 450,
+        tabPanel("Price Index",
+        plotlyOutput("plot1", height = 450, width = 750)),
+        tabPanel("Price Trends", 
+        plotlyOutput("plot2", height = 450, width = 750))
+
+      )
+      
+  )
+)
+
 ui <- dashboardPage(
   dashboardHeader(title = "Price Monitoring"),
   dashboardSidebar(
     title = "Controls",
-    dateInput("x", "Select Date:", value = fecha_filtro, min = fecha_filtro_min, max = fecha_filtro,
+    dateInput("x", "Select Date(Price Index):", value = fecha_filtro, min = fecha_filtro_min, max = fecha_filtro,
               format = "dd-mm-yyyy", startview = "month", weekstart = 0,
               language = "en", width = NULL),
-    selectInput("type", "Select Product:", choices = product_Manfield)
+    selectInput("type", "Select Product(Price Trends):", choices = product_Manfield)
   ),
-  dashboardBody(
-    fluidRow(
-      box(plotlyOutput("plot1", height = 500, width = 800)),
-      
-      box(plotlyOutput("plot2", height = 500, width = 800))
-  )
-)
+body
 )
 
 
