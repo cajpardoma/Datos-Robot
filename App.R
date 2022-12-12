@@ -67,10 +67,10 @@ body <-   dashboardBody(
       tabBox(
         title = "",
         id = "tabset1", height = 450, width = 450,
-        tabPanel("Price Index",
-        plotlyOutput("plot1", height = 450, width = 750)),
-        tabPanel("Price Trends", 
-        plotlyOutput("plot2", height = 450, width = 750))
+        tabPanel("Consumer Price Index - Only Lowes",
+        plotlyOutput("plot1", height = 550, width = 850)),
+        tabPanel("Consumer Price Trends - Only Lowes", 
+        plotlyOutput("plot2", height = 550, width = 850))
 
       )
       
