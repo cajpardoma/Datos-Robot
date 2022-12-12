@@ -17,15 +17,7 @@ library("RColorBrewer")
 library(lubridate)
 
 
-
-#Data <- read_excel("C:/Users/cpardom/Corona/Pricing - Mansfield/20. Lowes/Datos Robot/Datos_Robot_Lowes.xlsx", 
-#                   col_types = c("date", "text", "text", 
-#                                 "text", "text", "text", "text", "text", 
-#                                 "text", "text", "text", "text", "numeric", 
-#                                 "numeric", "numeric", "text", "text", 
-#                                 "text", "text", "text", "text","text", "text", 
-#                                 "numeric"))
-
+##Lectura de datos------------------------------------
 Data <- read_excel("Datos_Robot_Lowes.xlsx", 
                    col_types = c("date", "text", "text", 
                                  "text", "text", "text", "text", "text", 
@@ -36,26 +28,7 @@ Data <- read_excel("Datos_Robot_Lowes.xlsx",
 
 ##------------------------------------------------------------------------------------------------
 product_Manfield <- unique(Data$Descripcion_H_Manfield)
-Data_Product <- Data %>%
-  filter(Descripcion_H_Manfield == product_Manfield[2])
-
-fig <- plot_ly()
-fig <- fig %>%
-  add_trace(
-    type = 'scatter',
-    mode = 'lines + markers', 
-    color = Data_Product$Producto,
-    text = Data_Product$Fabricante,
-    x = Data_Product$Fecha,
-    y = Data_Product$Precio_Consumidor,
-    showlegend = TRUE,
-    colors = "Set1"
-  ) %>%  layout(title = paste('Price Trends Lowes', ''), plot_bgcolor='#e5ecf6',xaxis = list(title = 'Date'), 
-                yaxis = list(title = 'Price Trend'), legend = list(title=list(text='<b> Products </b>')))
-
-fig
-
-
+##----------------------------------------------------------
 ##-------------------------------------------------------------------------------------------------
 
 fecha_filtro <- max(Data$Fecha)
@@ -68,9 +41,19 @@ body <-   dashboardBody(
         title = "",
         id = "tabset1", height = 450, width = 450,
         tabPanel("Consumer Price Index - Only Lowes",
-        plotlyOutput("plot1", height = 550, width = 850)),
-        tabPanel("Consumer Price Trends - Only Lowes", 
-        plotlyOutput("plot2", height = 550, width = 850))
+                 
+        plotlyOutput("plot1", height = 550, width = 850)
+        ),
+        
+        tabPanel("Consumer Price Trends - Only Lowes",
+                 
+        plotlyOutput("plot2", height = 550, width = 850)
+        ),
+        
+        tabPanel("Consumer Price Index Trends - Only Lowes",
+                 
+                 plotlyOutput("plot3", height = 550, width = 850)
+        )
 
       )
       
@@ -149,6 +132,35 @@ server <- function(input, output) {
         colors = "Set1"
       ) %>%  layout(title = paste('Price Trends Lowes - ', input$type), plot_bgcolor='#e5ecf6',xaxis = list(title = 'Date'), 
                     yaxis = list(title = 'Price Trend'), legend = list(title=list(text='<b> Products </b>')))
+    
+    fig
+    
+    
+    
+  })
+  
+  output$plot3 <- renderPlotly({
+    
+    #-----------------------------------------------
+    Data_P_Index <- Data %>%
+      mutate(Price_Index = round(Precio_Consumidor*100/Precio_Max_Mansfield,1)) %>%
+      filter(Descripcion_H_Manfield == input$type)
+    
+    #-----------------------------------------------
+    
+    fig <- plot_ly()
+    fig <- fig %>%
+      add_trace(
+        type = 'scatter',
+        mode = 'lines + markers', 
+        color = Data_P_Index$Producto,
+        text = Data_P_Index$Fabricante,
+        x = Data_P_Index$Fecha,
+        y = Data_P_Index$Price_Index,
+        showlegend = TRUE,
+        colors = "Set1"
+      ) %>%  layout(title = paste('Price Index Trends Lowes - ', input$type), plot_bgcolor='#e5ecf6',xaxis = list(title = 'Date'), 
+                    yaxis = list(title = 'Price Index Trend'), legend = list(title=list(text='<b> Products </b>')))
     
     fig
     
