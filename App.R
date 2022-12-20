@@ -7,6 +7,8 @@
 #    http://shiny.rstudio.com/
 #
 
+#setwd("C:/Users/cpardom/Corona/Pricing - Mansfield/20. Lowes/Datos Robot")
+
 library(shiny)
 library(shinydashboard)
 library(readxl)
@@ -52,7 +54,8 @@ body <-   dashboardBody(
         
         tabPanel("Consumer Price Index Trends - Only Lowes",
                  
-                 plotlyOutput("plot3", height = 550, width = 850)
+                 plotlyOutput("plot3", height = 550, width = 850),
+                 imageOutput("image1")
         )
 
       )
@@ -159,14 +162,25 @@ server <- function(input, output) {
         y = Data_P_Index$Price_Index,
         showlegend = TRUE,
         colors = "Set1"
-      ) %>%  layout(title = paste('Price Index Trends Lowes - ', input$type), plot_bgcolor='#e5ecf6',xaxis = list(title = 'Date'), 
-                    yaxis = list(title = 'Price Index Trend'), legend = list(title=list(text='<b> Products </b>')))
+      ) %>%  layout(title = paste('% Price Index Trends Lowes - ', input$type), plot_bgcolor='#e5ecf6',xaxis = list(title = 'Date'), 
+                    yaxis = list(title = '% Price Index Trend'), legend = list(title=list(text='<b> Products </b>')))
     
     fig
     
     
     
   })
+  
+  output$image1 <- renderImage({
+    ImgTxt <- "./sanitario.jpg"
+    width<- "20%"
+    height<- "20%"
+    list(src = ImgTxt,
+         contentType = "image/jpg",
+         width = width,
+         height = "auto"
+    )
+  }, deleteFile = FALSE)
   
 }
 
