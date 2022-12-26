@@ -54,8 +54,24 @@ body <-   dashboardBody(
         
         tabPanel("Consumer Price Index Trends - Only Lowes",
                  
-                 plotlyOutput("plot3", height = 550, width = 850),
-                 imageOutput("image1")
+                 fluidRow(
+                   box(title = "Graph", solidHeader = T,
+                       width = 10,
+                       collapsible = T,
+                       plotlyOutput("plot3", height = 550, width = 850 )
+                       ),
+                   box(title = "Image", solidHeader = T,
+                        width = 2,
+                        collapsible = T,
+                        imageOutput("image1")
+                   ),
+                   box(title = "Click",
+                       solidHeader = T,
+                       width = 2,
+                       collapsible = T,
+                       verbatimTextOutput("click"))
+                 )
+                 
         )
 
       )
@@ -173,14 +189,18 @@ server <- function(input, output) {
   
   output$image1 <- renderImage({
     ImgTxt <- "./sanitario.jpg"
-    width<- "20%"
-    height<- "20%"
+    width<- "100%"
+    height<- "100%"
     list(src = ImgTxt,
          contentType = "image/jpg",
          width = width,
          height = "auto"
     )
   }, deleteFile = FALSE)
+  
+  output$click <- renderPrint({
+       event_data("plotly_click")
+     })
   
 }
 
