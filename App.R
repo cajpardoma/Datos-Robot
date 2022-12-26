@@ -64,12 +64,7 @@ body <-   dashboardBody(
                         width = 2,
                         collapsible = T,
                         imageOutput("image1")
-                   ),
-                   box(title = "Click",
-                       solidHeader = T,
-                       width = 2,
-                       collapsible = T,
-                       verbatimTextOutput("click"))
+                   )
                  )
                  
         )
@@ -198,9 +193,6 @@ server <- function(input, output) {
     )
   }, deleteFile = FALSE)
   
-  output$click <- renderPrint({
-       event_data("plotly_click")
-     })
   
 }
 
